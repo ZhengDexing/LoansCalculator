@@ -2,14 +2,14 @@ package entity
 
 // 计算器输入实体
 type CalculatorInput struct {
-	Name          string //风电场名称
-	Investment    string //风电场总投资（万元）
-	Proportion    string //自投比例
-	Years         int    //贷款年限
-	InterestRate  string //基本利率
-	UpProportion  string //上浮比例
-	PaymentMethod string //还款方式
-	StartMonth    string //还款起始月份
+	Name          string  //风电场名称
+	Investment    float64 //风电场总投资（万元）
+	Proportion    float64 //自投比例
+	Years         int     //贷款年限
+	InterestRate  string  //基本利率
+	UpProportion  string  //上浮比例
+	PaymentMethod string  //还款方式
+	StartMonth    string  //还款起始月份
 }
 
 // 计算器输出实体
@@ -24,7 +24,13 @@ type CalculatorOutput struct {
 }
 
 // 月还款计划实体
-type repaymentPlan struct {
+type RepaymentPlan struct {
 	Time  string  // 年月
 	Money float64 //金额
+}
+
+// 成功返回的实体
+type Result struct {
+	CalculatorOutput CalculatorOutput
+	RepaymentPlan    []RepaymentPlan
 }
