@@ -1,7 +1,6 @@
 package util
 
 import (
-	"github.com/shopspring/decimal"
 	"time"
 )
 
@@ -12,7 +11,7 @@ const (
 // 获取期限了所有年月格式为 xx年xx月
 // startTime 起始时间  2019年10月
 // num 月数
-func getAllMonth(startTime string, num int) (result []string) {
+func GetAllMonth(startTime string, num int) (result []string) {
 	x := startTime
 	t, _ := time.Parse(layout, x)
 	for i := 0; i < num; i++ {
@@ -23,10 +22,4 @@ func getAllMonth(startTime string, num int) (result []string) {
 		result = append(result, t.Format(layout))
 	}
 	return result
-}
-
-func bigNumberSub(value1 float64, value2 float64) string {
-	x := decimal.NewFromFloat(value1)
-	y := decimal.NewFromFloat(value2)
-	return x.Sub(y).String()
 }
