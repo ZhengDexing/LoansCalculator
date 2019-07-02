@@ -20,8 +20,6 @@ func InterestAvg(calculatorInput entity.CalculatorInput) entity.CalculatorOutput
 	interestRate := ((calculatorInput.InterestRate / 100) * (1 + (calculatorInput.UpProportion / 100)) / 12) * 100
 
 	// 月均还款
-	//monthRepayment := loanMoney*(interestRate/100)*util.Powerf2(1+(interestRate/100), month)/
-	//	util.Powerf2(1+(interestRate/100), month) - 1
 	monthRepayment := loanMoney * (interestRate / 100) * util.Powerf2(1+(interestRate/100), month) /
 		(util.Powerf2(1+(interestRate/100), month) - 1)
 	repayment := monthRepayment * float64(month)
@@ -60,12 +58,12 @@ func MoneyAvg(calculatorInput entity.CalculatorInput) entity.CalculatorOutput {
 
 	monthRepayment := repayment / float64(month)
 	return entity.CalculatorOutput{
-		Money:          money,
-		LoanMoney:      loanMoney,
-		InterestRate:   interestRate,
-		Repayment:      repayment,
-		Interest:       interest,
+		Money:          util.Round(money),
+		LoanMoney:      util.Round(loanMoney),
+		InterestRate:   util.Round(interestRate),
+		Repayment:      util.Round(repayment),
+		Interest:       util.Round(interest),
 		Month:          month,
-		MonthRepayment: monthRepayment,
+		MonthRepayment: util.Round(monthRepayment),
 	}
 }

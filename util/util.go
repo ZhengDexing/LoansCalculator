@@ -1,6 +1,9 @@
 package util
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+	"math"
+)
 
 // 精度运算 加法
 func BigNumberAdd(value1 float64, value2 float64) string {
@@ -37,4 +40,9 @@ func Powerf2(x float64, n int) float64 {
 	} else {
 		return x * Powerf2(x, n-1)
 	}
+}
+
+func Round(f float64) float64 {
+	n10 := math.Pow10(2)
+	return math.Trunc((f+0.5/n10)*n10) / n10
 }
