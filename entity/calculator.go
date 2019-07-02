@@ -6,9 +6,9 @@ type CalculatorInput struct {
 	Investment    float64 //风电场总投资（万元）
 	Proportion    float64 //自投比例
 	Years         int     //贷款年限
-	InterestRate  string  //基本利率
-	UpProportion  string  //上浮比例
-	PaymentMethod string  //还款方式
+	InterestRate  float64 //基本利率
+	UpProportion  float64 //上浮比例
+	PaymentMethod int     //还款方式
 	StartMonth    string  //还款起始月份
 }
 
