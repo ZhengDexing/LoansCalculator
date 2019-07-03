@@ -36,7 +36,7 @@ func BigNumberDiv(value1 float64, value2 float64) string {
 //递归法 求x^n
 func Powerf2(x float64, n int) float64 {
 	if n == 0 {
-		return x
+		return 1
 	} else {
 		return x * Powerf2(x, n-1)
 	}

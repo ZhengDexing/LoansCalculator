@@ -20,6 +20,7 @@ func (c *Calculator) Post() {
 	// json解析成对象
 	err := json.Unmarshal(data, &calculatorInput)
 	if err != nil {
+		fmt.Println(err)
 		result := util.Result(util.ERROR, nil, "请求解析失败！")
 		c.Data["json"] = result
 		c.ServeJSON()
@@ -28,7 +29,7 @@ func (c *Calculator) Post() {
 
 	fmt.Println("calculatorInput:", calculatorInput)
 
-	var outPut entity.CalculatorOutput
+	var outPut entity.Result
 
 	switch calculatorInput.PaymentMethod {
 	case 0:

@@ -32,5 +32,5 @@ type RepaymentPlan struct {
 // 成功返回的实体
 type Result struct {
 	CalculatorOutput CalculatorOutput
-	RepaymentPlan    []RepaymentPlan
+	RepaymentPlan    []interface{}
 }
