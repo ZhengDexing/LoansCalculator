@@ -1,10 +1,408 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cmn-Hans">
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
     <title>贷款计算器</title>
+
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="./lib/DataTables/datatables.min.css"/>
+
+    <script type="text/javascript" src="./lib/DataTables/datatables.min.js"></script>
+
+    <style>
+
+
+        body {
+            background-image: url("./images/550421.jpg");
+            background-attachment: fixed;
+			background-size: cover;
+        }
+
+        .panel-fx {
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        #result {
+            display: none;
+        }
+
+
+    </style>
 </head>
 <body>
-    <h1>贷款计算器</h1>
+
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">计算器</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">首页 </a></li>
+            </ul>
+
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+
+
+<div class="container">
+    <div class="panel panel-fx">
+        <div class="panel-body">
+            <div class="page-header">
+                <h1>贷款计算器
+                </h1>
+            </div>
+
+            <form id="form-calc">
+                <div class="row">
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="name">风场名字</label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                   placeholder="" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="investment">风电场总投掷(万元)</label>
+                            <input type="number" class="form-control" id="investment" name="investment"
+                                   placeholder="" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="proportion">自投比例(百分比)</label>
+                            <input type="number" class="form-control" id="proportion" name="proportion"
+                                   placeholder="" max="100" min="0" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="years">贷款年限(年)</label>
+                            <input type="number" class="form-control" id="years" name="years"
+                                   placeholder="" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="interestRate">贷款基本利率(百分比)</label>
+                            <input type="number" class="form-control" id="interestRate" name="interestRate"
+                                   placeholder="" max="100" min="0" step="0.01" required>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="upProportion">贷款上浮比例(百分比)</label>
+                            <input type="number" class="form-control" id="upProportion" name="upProportion"
+                                   placeholder="" max="100" min="0" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="paymentMethod">还款方式</label>
+                            <select class="form-control" id="paymentMethod" name="paymentMethod">
+                                <option value="0" selected>等额本息</option>
+                                <option value="1">等额本金</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <!--                    <div class="col-md-6">-->
+                    <!--                        <div class="form-group">-->
+                    <!--                            <label for="startMonth">还款起始月份</label>-->
+                    <!--                            <input type="month" class="form-control" id="startMonth" name="startMonth"-->
+                    <!--                                   placeholder="" required>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="startY">还款起始年份</label>
+                            <input type="number" class="form-control" id="startY" name="startY"
+                                   placeholder="2019" min="2019" max="2999" step="1" required>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="startM">还款起始月份</label>
+                            <select class="form-control" id="startM" name="startM" required>
+                                <option value="01">1月</option>
+                                <option value="02">2月</option>
+                                <option value="03">3月</option>
+                                <option value="04">4月</option>
+                                <option value="05">5月</option>
+                                <option value="06">6月</option>
+                                <option value="07">7月</option>
+                                <option value="08">8月</option>
+                                <option value="09">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <input type="hidden" id="startMonth" name="startMonth">
+
+
+                </div>
+
+                <input type="submit" class="btn btn-default" value="立即计算">
+
+                <input type="reset" class="btn btn-default" value="重置">
+            </form>
+
+            <hr>
+
+
+            <div id="result">
+
+                <div class="page-header">
+                    <h1>计算结果</h1>
+                </div>
+
+                <div>
+                    <table class="table table-bordered table-striped">
+                        <tr>
+                            <th style="width: 50%">列</th>
+                            <th style="width: 50%">值</th>
+                        </tr>
+
+                        <tr>
+                            <td>自投金额(万元)</td>
+                            <td id="r-Money">-</td>
+                        </tr>
+
+                        <tr>
+                            <td>贷款金额(万元)</td>
+                            <td id="r-LoanMoney">-</td>
+                        </tr>
+
+                        <tr>
+                            <td>贷款月利率（100%）</td>
+                            <td id="r-InterestRate">-</td>
+                        </tr>
+
+                        <tr>
+                            <td>还款总额(万元)</td>
+                            <td id="r-Repayment">-</td>
+                        </tr>
+                        <tr>
+                            <td>支付利息(万元)</td>
+                            <td id="r-Interest">-</td>
+                        </tr>
+                        <tr>
+                            <td>贷款月数（月）</td>
+                            <td id="r-Month">-</td>
+                        </tr>
+                        <tr>
+                            <td>月均还款(万元)</td>
+                            <td id="r-MonthRepayment">-</td>
+                        </tr>
+
+
+                    </table>
+
+
+                </div>
+
+                <hr>
+
+                <div class="page-header">
+                    <h1>月还款计划</h1>
+                    <div class="table-btn"></div>
+                </div>
+
+                <table class="table" id="plans">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>月还款计划</th>
+                        <th>归还本金（万元）</th>
+                        <th>归还利息（万元）</th>
+                        <th>本息合计（万元）</th>
+                        <th>剩余本金</th>
+                    </tr>
+                    </thead>
+
+                </table>
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+</div>
+
+<script type="application/javascript">
+
+    let plansTable = $("#plans").DataTable({
+        "language": {
+            "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Chinese.json"
+        },
+        "pageLength": 100,
+        // "ajax": './data.json'
+    });
+
+    // $.fn.dataTable.Buttons.defaults.dom.container.className = "table-btn";
+
+    new $.fn.dataTable.Buttons(plansTable, {
+        buttons: [
+            // {
+            //     extend: 'excel',
+            //     text: '<a class="btn btn-default" href="#" role="button">下载Excel</a>',
+            //     className: "btn btn-white btn-primary btn-bold",
+            //     header: true,
+            //     exportOptions: {
+            //         modifier: {
+            //             page: 'current'
+            //         }
+            //     }
+            // }
+            {
+                extend: "excel",
+                text: "下载Excel",
+                className: "btn btn-default",
+                filename: "计算结果",
+                title: ""
+            },
+        ]
+    });
+    plansTable.buttons().container().appendTo($('.table-btn'));
+
+
+    $("#form-calc").submit(function (e) {
+        e.preventDefault(); // 阻止表单提交
+
+
+        $("#startMonth").val($("#startY").val() + '年' + $("#startM").val() + "月");
+
+        // $.get("./res.json", function (data) {
+        //     // console.log(data.data);
+        //     let rData = data.data;
+        //
+        //     console.log(rData);
+        //
+        //     $("#r-Money").text(rData.CalculatorOutput.Money);
+        //     $("#r-LoanMoney").text(rData.CalculatorOutput.LoanMoney);
+        //     $("#r-InterestRate").text(rData.CalculatorOutput.InterestRate);
+        //     $("#r-Repayment").text(rData.CalculatorOutput.Repayment);
+        //     $("#r-Interest").text(rData.CalculatorOutput.Interest);
+        //     $("#r-Month").text(rData.CalculatorOutput.Month);
+        //     $("#r-MonthRepayment").text(rData.CalculatorOutput.MonthRepayment);
+        //
+        //
+        //     plansTable.clear().draw();
+        //
+        //
+        //     // 对结果进行遍历
+        //     for (let i = 0; i < rData.RepaymentPlan.length; i++) {
+        //         plansTable.row.add(rData.RepaymentPlan[i]);
+        //     }
+        //     plansTable.draw();
+        //
+        //     $("#result").show();
+        //     $("html,body").animate({scrollTop: $("#result").offset().top}, 1000)
+        //
+        // });
+
+
+        $.ajax({
+            url: "http://localhost:8080/calculator",
+            method: "POST",
+            async: true,
+            cache: false,
+            data: JSON.stringify(getFormData($("#form-calc"))),
+            contentType: false,
+            processData: false,
+            success: function (data, textStatus) {
+                let rData = data.data;
+
+                console.log(rData);
+
+                $("#r-Money").text(rData.CalculatorOutput.Money);
+                $("#r-LoanMoney").text(rData.CalculatorOutput.LoanMoney);
+                $("#r-InterestRate").text(rData.CalculatorOutput.InterestRate);
+                $("#r-Repayment").text(rData.CalculatorOutput.Repayment);
+                $("#r-Interest").text(rData.CalculatorOutput.Interest);
+                $("#r-Month").text(rData.CalculatorOutput.Month);
+                $("#r-MonthRepayment").text(rData.CalculatorOutput.MonthRepayment);
+
+
+                plansTable.clear().draw();
+
+
+                // 对结果进行遍历
+                for (let i = 0; i < rData.RepaymentPlan.length; i++) {
+                    plansTable.row.add(rData.RepaymentPlan[i]);
+                }
+                plansTable.draw();
+
+                $("#result").show();
+                $("html,body").animate({scrollTop: $("#result").offset().top}, 1000)
+            },
+            error: function () {
+
+
+                console.error("A network error occur, please contact the developer");
+            }
+        });
+    });
+
+    function getFormData($form) {
+        let unIndexedArray = $form.serializeArray();
+        const indexed_array = {};
+
+        $.map(unIndexedArray, function (n, i) {
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
+</script>
+
+
 </body>
 </html>
