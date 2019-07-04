@@ -12,6 +12,18 @@ type CalculatorInput struct {
 	StartMonth    string  //还款起始月份
 }
 
+// 计算器输入实体
+type CalculatorInputStr struct {
+	Name          string //风电场名称
+	Investment    string //风电场总投资（万元）
+	Proportion    string //自投比例
+	Years         string //贷款年限
+	InterestRate  string //基本利率
+	UpProportion  string //上浮比例
+	PaymentMethod string //还款方式
+	StartMonth    string //还款起始月份
+}
+
 // 计算器输出实体
 type CalculatorOutput struct {
 	Money          float64 // 自投金额

@@ -3,7 +3,6 @@ package service
 import (
 	"LoansCalculator/entity"
 	"LoansCalculator/util"
-	"fmt"
 	"strconv"
 )
 
@@ -89,25 +88,28 @@ func MoneyAvg(calculatorInput entity.CalculatorInput) entity.Result {
 }
 
 func InterestAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64) (all []interface{}) {
-	fmt.Println(startMonth, "---", month, "---", loanMoney, "---", interestRate)
 	months := util.GetAllMonth(startMonth, month)
 	var oldLoanMoney = loanMoney
 	for key, value := range months {
-		fmt.Println(key, "----", value)
-		var line []interface{}
-		line = append(line, key+1)
-		line = append(line, value)
+		var line [6]interface{}
+		line[0] = key + 1
+		line[1] = value
 		// 归还本金
 		principal := util.Round(loanMoney * interestRate * (util.Powerf2(1+interestRate, key)) /
 			(util.Powerf2(1+interestRate, month) - 1))
-		line = append(line, principal)
+		line[2] = principal
 		interest := util.Round(loanMoney * interestRate * (util.Powerf2(1+interestRate, month) - util.Powerf2(1+interestRate, key)) /
 			(util.Powerf2(1+interestRate, month) - 1))
-		line = append(line, interest)
+		line[3] = interest
 		sum := util.Round(principal + interest)
-		line = append(line, sum)
+		line[4] = sum
 		principalAll := util.Round(oldLoanMoney - principal)
-		line = append(line, principalAll)
+		if principalAll < 0 {
+			line[2] = oldLoanMoney
+			line[5] = 0
+		} else {
+			line[5] = principalAll
+		}
 		oldLoanMoney = principalAll
 		all = append(all, line)
 	}
@@ -118,18 +120,26 @@ func MoneyAvgExcel(startMonth string, month int, loanMoney float64, interestRate
 	months := util.GetAllMonth(startMonth, month)
 	var oldSurplus = loanMoney
 	for key, value := range months {
-		var line []interface{}
-		line = append(line, key+1)
-		line = append(line, value)
+		var line [6]interface{}
+		line[0] = key + 1
+		line[1] = value
 		principal := util.Round(loanMoney / float64(month))
-		line = append(line, principal)
+		line[2] = principal
 		surplus := util.Round(oldSurplus - principal)
-		oldSurplus = surplus
+
 		interest := util.Round(surplus * interestRate)
-		line = append(line, interest)
+		line[3] = interest
 		sum := util.Round(principal + interest)
-		line = append(line, sum)
-		line = append(line, surplus)
+		line[4] = sum
+
+		if surplus < 0 {
+			line[2] = oldSurplus
+			line[4] = oldSurplus
+			line[5] = 0
+		} else {
+			line[5] = surplus
+		}
+		oldSurplus = surplus
 		all = append(all, line)
 	}
 	return all
