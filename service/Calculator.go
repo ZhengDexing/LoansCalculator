@@ -26,8 +26,30 @@ func InterestAvg(calculatorInput entity.CalculatorInput) entity.Result {
 	repayment := util.Round(loanMoney * (interestRate / 100) * util.Powerf2(1+(interestRate/100), month) /
 		(util.Powerf2(1+(interestRate/100), month) - 1) * 240)
 	interest := util.Round(repayment - loanMoney)
+	// 年发电收益
+	incomeYear := util.Round(float64(calculatorInput.Capacity) * float64(calculatorInput.Hour) * calculatorInput.Price *
+		(1 - (calculatorInput.PowerProportion)/100) / 10000)
+	// 20年收益
+	income20 := util.Round(incomeYear * 20)
+	// 年收益率（100%）
+	incomeRate := util.Round((incomeYear / calculatorInput.Investment) * 100)
+
+	//year := int(math.Ceil(repayment / incomeYear))
+	year := util.Round(repayment / incomeYear)
 	// 生成excel数据格式
-	excel := InterestAvgExcel(calculatorInput.StartMonth, month, loanMoney, interestRate/100)
+	excel := InterestAvgExcel(calculatorInput.StartMonth, month, loanMoney, interestRate/100, incomeYear)
+	principal := excel[0][4].(float64) * 12
+
+	var expenditure [][]float64
+	for i := 1; i <= 20; i++ {
+		var line []float64
+		f := util.Round(calculatorInput.Investment + interest/
+			float64(calculatorInput.Years)*float64(i))
+		profit := incomeYear * float64(i)
+		line = append(line, f)
+		line = append(line, profit)
+		expenditure = append(expenditure, line)
+	}
 	calculatorOutput := entity.CalculatorOutput{
 		Money:          money,
 		LoanMoney:      loanMoney,
@@ -36,6 +58,13 @@ func InterestAvg(calculatorInput entity.CalculatorInput) entity.Result {
 		Interest:       interest,
 		Month:          month,
 		MonthRepayment: monthRepayment,
+		IncomeYear:     incomeYear,
+		Income20:       income20,
+		IncomeRate:     incomeRate,
+		Year:           year,
+		PrincipalYear:  principal,
+		ProfitYear:     incomeYear,
+		Expenditure:    expenditure,
 	}
 
 	return entity.Result{
@@ -68,9 +97,29 @@ func MoneyAvg(calculatorInput entity.CalculatorInput) entity.Result {
 
 	monthRepayment := util.Round(repayment / float64(month))
 
-	// 生成excel数据格式
-	excel := MoneyAvgExcel(calculatorInput.StartMonth, month, loanMoney, interestRate/100)
+	// 年发电收益
+	incomeYear := util.Round(float64(calculatorInput.Capacity) * float64(calculatorInput.Hour) * calculatorInput.Price *
+		(1 - (calculatorInput.PowerProportion)/100) / 10000)
+	// 20年收益
+	income20 := util.Round(incomeYear * 20)
+	// 年收益率（100%）
+	incomeRate := util.Round((incomeYear / calculatorInput.Investment) * 100)
 
+	//year := int(math.Ceil(repayment / incomeYear))
+	year := util.Round(repayment / incomeYear)
+	// 生成excel数据格式
+	excel := MoneyAvgExcel(calculatorInput.StartMonth, month, loanMoney, interestRate/100, incomeYear)
+	principal := excel[0][4].(float64) * 12
+	var expenditure [][]float64
+	for i := 1; i <= 20; i++ {
+		var line []float64
+		f := util.Round(calculatorInput.Investment + interest/
+			float64(calculatorInput.Years)*float64(i))
+		profit := incomeYear * float64(i)
+		line = append(line, f)
+		line = append(line, profit)
+		expenditure = append(expenditure, line)
+	}
 	calculatorOutput := entity.CalculatorOutput{
 		Money:          money,
 		LoanMoney:      loanMoney,
@@ -79,6 +128,13 @@ func MoneyAvg(calculatorInput entity.CalculatorInput) entity.Result {
 		Interest:       interest,
 		Month:          month,
 		MonthRepayment: monthRepayment,
+		IncomeYear:     incomeYear,
+		Income20:       income20,
+		IncomeRate:     incomeRate,
+		Year:           year,
+		PrincipalYear:  principal,
+		ProfitYear:     incomeYear,
+		Expenditure:    expenditure,
 	}
 
 	return entity.Result{
@@ -87,11 +143,11 @@ func MoneyAvg(calculatorInput entity.CalculatorInput) entity.Result {
 	}
 }
 
-func InterestAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64) (all []interface{}) {
+func InterestAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64, incomeYear float64) (all [][7]interface{}) {
 	months := util.GetAllMonth(startMonth, month)
 	var oldLoanMoney = loanMoney
 	for key, value := range months {
-		var line [6]interface{}
+		var line [7]interface{}
 		line[0] = key + 1
 		line[1] = value
 		// 归还本金
@@ -110,17 +166,18 @@ func InterestAvgExcel(startMonth string, month int, loanMoney float64, interestR
 		} else {
 			line[5] = principalAll
 		}
+		line[6] = util.Round(incomeYear/12 - principal - interest)
 		oldLoanMoney = principalAll
 		all = append(all, line)
 	}
 	return all
 }
 
-func MoneyAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64) (all []interface{}) {
+func MoneyAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64, incomeYear float64) (all [][7]interface{}) {
 	months := util.GetAllMonth(startMonth, month)
 	var oldSurplus = loanMoney
 	for key, value := range months {
-		var line [6]interface{}
+		var line [7]interface{}
 		line[0] = key + 1
 		line[1] = value
 		principal := util.Round(loanMoney / float64(month))
@@ -139,6 +196,7 @@ func MoneyAvgExcel(startMonth string, month int, loanMoney float64, interestRate
 		} else {
 			line[5] = surplus
 		}
+		line[6] = util.Round(incomeYear/12 - principal - interest)
 		oldSurplus = surplus
 		all = append(all, line)
 	}

@@ -7,14 +7,15 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
+	"net/url"
 	"strconv"
 )
 
-type Calculator struct {
+type CalculatorExcel struct {
 	beego.Controller
 }
 
-func (c *Calculator) Post() {
+func (c *CalculatorExcel) Post() {
 	var calculatorInput entity.CalculatorInputStr
 	// 获取requestBody
 	data := c.Ctx.Input.RequestBody
@@ -74,7 +75,20 @@ func (c *Calculator) Post() {
 		c.ServeJSON()
 		return
 	}
-	result := util.Result(util.SUCCESS, outPut, "success")
-	c.Data["json"] = result
-	c.ServeJSON()
+
+	file := service.ExcelFile{CalculatorInput: param, Result: outPut}
+	// 生成excel 返回文件流
+	buffer, err := file.CreateExcelFilm()
+
+	fName := calculatorInput.Name + ".xlsx"
+	fn := url.PathEscape(fName)
+	fn = "filename=" + fName + "; filename*=utf-8''" + fn
+	c.Ctx.Output.Header("Content-Disposition", "attachment; "+fn)
+	c.Ctx.Output.Header("Content-Description", "File Transfer")
+	c.Ctx.Output.Header("Content-Type", "application/octet-stream")
+	c.Ctx.Output.Header("Content-Transfer-Encoding", "binary")
+	c.Ctx.Output.Header("Expires", "0")
+	c.Ctx.Output.Header("Cache-Control", "must-revalidate")
+	c.Ctx.Output.Header("Pragma", "public")
+	_ = c.Ctx.Output.Body(buffer.Bytes())
 }

@@ -10,7 +10,7 @@ import (
 func GetAllMonth(startTime string, num int) (result []string) {
 	x := startTime
 	t, _ := time.Parse("2006年01月", x)
-	for i := 0; i <= num; i++ {
+	for i := 0; i < num; i++ {
 		if i == 0 {
 			result = append(result, startTime)
 			continue
