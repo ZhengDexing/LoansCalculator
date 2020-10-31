@@ -1,13 +1,13 @@
 package test
 
 import (
-	_ "LoansCalculator/routers"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"runtime"
 	"testing"
 
+	_ "LoansCalculator/routers"
 	"github.com/astaxie/beego"
 	. "github.com/smartystreets/goconvey/convey"
 )

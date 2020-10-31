@@ -1,8 +1,9 @@
 package util
 
 import (
-	"github.com/shopspring/decimal"
 	"math"
+
+	"github.com/shopspring/decimal"
 )
 
 // 精度运算 加法

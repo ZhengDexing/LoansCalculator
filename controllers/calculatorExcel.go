@@ -1,14 +1,15 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/url"
+	"strconv"
+
 	"LoansCalculator/entity"
 	"LoansCalculator/service"
 	"LoansCalculator/util"
-	"encoding/json"
-	"fmt"
 	"github.com/astaxie/beego"
-	"net/url"
-	"strconv"
 )
 
 type CalculatorExcel struct {
