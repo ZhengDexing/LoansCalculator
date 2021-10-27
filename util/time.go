@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// 获取期限了所有年月格式为 xx年xx月
+// GetAllMonth 获取期限了所有年月格式为 xx年xx月
 // startTime 起始时间  2019年10月
 // num 月数
 func GetAllMonth(startTime string, num int) (result []string) {

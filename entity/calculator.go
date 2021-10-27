@@ -1,6 +1,6 @@
 package entity
 
-// 计算器输入实体
+// CalculatorInput 计算器输入实体
 type CalculatorInput struct {
 	Name            string  //风电场名称
 	Investment      float64 //风电场总投资（万元）
@@ -16,7 +16,7 @@ type CalculatorInput struct {
 	Capacity        int     //风场容量(kW)
 }
 
-// 计算器输入实体
+// CalculatorInputStr 计算器输入实体
 type CalculatorInputStr struct {
 	Name            string //风电场名称
 	Investment      string //风电场总投资（万元）
@@ -32,7 +32,7 @@ type CalculatorInputStr struct {
 	Capacity        string //风场容量(kW)
 }
 
-// 计算器输出实体
+// CalculatorOutput 计算器输出实体
 type CalculatorOutput struct {
 	Money          float64     // 自投金额
 	LoanMoney      float64     // 贷款金额
@@ -50,13 +50,13 @@ type CalculatorOutput struct {
 	Expenditure    [][]float64 // 支出收入
 }
 
-// 月还款计划实体
+// RepaymentPlan 月还款计划实体
 type RepaymentPlan struct {
 	Time  string  // 年月
 	Money float64 //金额
 }
 
-// 成功返回的实体
+// Result 成功返回的实体
 type Result struct {
 	CalculatorOutput CalculatorOutput
 	RepaymentPlan    [][7]interface{}

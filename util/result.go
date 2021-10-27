@@ -5,7 +5,7 @@ const (
 	ERROR   = -1 // 异常
 )
 
-// 统一返回json结构
+// Result 统一返回json结构
 func Result(code int, data interface{}, message string) map[string]interface{} {
 	return map[string]interface{}{
 		"code":    code,

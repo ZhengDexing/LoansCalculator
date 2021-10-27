@@ -6,6 +6,7 @@ import (
 
 	"LoansCalculator/entity"
 	"LoansCalculator/util"
+
 	"github.com/360EntSecGroup-Skylar/excelize"
 )
 
@@ -147,6 +148,7 @@ func (ef ExcelFile) analysis(excelFile *excelize.File) error {
 	return nil
 }
 
+// CreateExcelFilm 创建 Excel 文件
 func (ef ExcelFile) CreateExcelFilm() (*bytes.Buffer, error) {
 	var excelFile = excelize.NewFile()
 	excelFile.SetColWidth("Sheet1", "A", "G", 18)

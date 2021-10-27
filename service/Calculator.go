@@ -7,7 +7,7 @@ import (
 	"LoansCalculator/util"
 )
 
-// 计算等额本息
+// InterestAvg 计算等额本息
 func InterestAvg(calculatorInput entity.CalculatorInput) entity.Result {
 	// 自投金额 = 总投资X自投比例
 	money := util.Round(calculatorInput.Investment * (calculatorInput.Proportion / 100))
@@ -74,7 +74,7 @@ func InterestAvg(calculatorInput entity.CalculatorInput) entity.Result {
 	}
 }
 
-// 等额本金
+// MoneyAvg 等额本金
 func MoneyAvg(calculatorInput entity.CalculatorInput) entity.Result {
 	// 自投金额 = 总投资X自投比例
 	money := util.Round(calculatorInput.Investment * (calculatorInput.Proportion / 100))
@@ -144,6 +144,7 @@ func MoneyAvg(calculatorInput entity.CalculatorInput) entity.Result {
 	}
 }
 
+// InterestAvgExcel 生成计算等额本息 Excel 数据
 func InterestAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64, incomeYear float64) (all [][7]interface{}) {
 	months := util.GetAllMonth(startMonth, month)
 	var oldLoanMoney = loanMoney
@@ -174,6 +175,7 @@ func InterestAvgExcel(startMonth string, month int, loanMoney float64, interestR
 	return all
 }
 
+// MoneyAvgExcel 等额本金 Excel 数据
 func MoneyAvgExcel(startMonth string, month int, loanMoney float64, interestRate float64, incomeYear float64) (all [][7]interface{}) {
 	months := util.GetAllMonth(startMonth, month)
 	var oldSurplus = loanMoney
